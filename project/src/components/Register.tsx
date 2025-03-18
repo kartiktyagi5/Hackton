@@ -13,22 +13,21 @@ export default function Register() {
   const [inviteLink, setInviteLink] = useState('');
 
   // Safely get the auth token from localStorage
-  const authToken = localStorage.getItem('sb-xzzasahddsqbapwmvlkf-auth-token');
-  const tokenData = authToken ? JSON.parse(atob(authToken.split('.')[1])) : null;
-
+const tokenData= localStorage.getItem('user');
   const [createTeamForm, setCreateTeamForm] = useState({
     teamName: '',
     leadName: '',
     collegeName: '',
-    email: tokenData ? tokenData.email : '',
+    email: tokenData || ''
   });
 
   const [joinTeamForm, setJoinTeamForm] = useState({
     teamCode: '',
     name: '',
     collegeName: '',
-    email: tokenData ? tokenData.email : '',
+    email: tokenData || ''
   });
+
 
   const handleCreateTeamSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
