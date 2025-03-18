@@ -30,7 +30,7 @@ export default function Hero({ onRegisterClick }: HeroProps) {
             </p>
             <div className="flex space-x-4">
               <button 
-                onClick={onRegisterClick}
+                onClick={()=> navigate('/auth')}
                 className="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-full text-white font-semibold 
                 transition-all duration-300 hover:shadow-lg hover:scale-105"
               >
