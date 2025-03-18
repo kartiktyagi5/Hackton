@@ -140,6 +140,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       onLogout();
+      navigate('/');
     } catch (error) {
       console.error('Error signing out:', error);
       toast.error('Failed to sign out');
