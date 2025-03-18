@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import Timeline from './components/Timeline';
@@ -12,9 +12,51 @@ import Features from './components/Features';
 import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
 import AdminDashboard from './components/AdminDashboard';
+import JoinTeamPage from './components/JoinTeamPage';
 import { supabase } from './lib/supabase';
 
 const ADMIN_EMAIL = 'rohitkumarsingh2021@gmail.com';
+
+// Protected route wrapper component
+const ProtectedRoute = ({ 
+  children, 
+  adminOnly = false 
+}: { 
+  children: React.ReactNode, 
+  adminOnly?: boolean 
+}) => {
+  const [session, setSession] = useState<boolean | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    checkUser();
+  }, []);
+
+  const checkUser = async () => {
+    const { data: { session: userSession } } = await supabase.auth.getSession();
+    setSession(!!userSession);
+    setIsAdmin(userSession?.user?.email === ADMIN_EMAIL);
+  };
+
+  if (session === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return <Navigate to="/auth" state={{ from: location.pathname }} replace />;
+  }
+
+  if (adminOnly && !isAdmin) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <>{children}</>;
+};
 
 function App() {
   const [session, setSession] = useState<boolean>(false);
@@ -38,13 +80,6 @@ function App() {
 
   const checkIfAdmin = (email?: string | null) => {
     setIsAdmin(email === ADMIN_EMAIL);
-  };
-
-  // Protected route component
-  const ProtectedRoute = ({ children, adminOnly = false }: { children: React.ReactNode, adminOnly?: boolean }) => {
-    if (!session) return <Navigate to="/auth" />;
-    if (adminOnly && !isAdmin) return <Navigate to="/dashboard" />;
-    return <>{children}</>;
   };
 
   // Home page content
@@ -71,10 +106,7 @@ function App() {
           element={
             session ? 
               <Navigate to={isAdmin ? "/admin" : "/dashboard"} /> : 
-              <Auth onSuccess={() => {
-                setShowAuth(false);
-                return <Navigate to={isAdmin ? "/admin" : "/dashboard"} />;
-              }} />
+              <Auth onSuccess={() => setShowAuth(false)} />
           } 
         />
         <Route 
@@ -93,9 +125,17 @@ function App() {
             </ProtectedRoute>
           } 
         />
+        <Route 
+          path="/join/:code" 
+          element={
+            <ProtectedRoute>
+              <JoinTeamPage />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
     </Router>
   );
 }
 
-export default App
+export default App;
