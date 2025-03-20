@@ -8,9 +8,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* About Section */}
           <div className="col-span-1 md:col-span-2">
-            <h3 className="text-white font-bold text-xl mb-4">Hackathon 2025</h3>
+            <h3 className="text-white font-bold text-xl mb-4">Code4Change</h3>
             <p className="text-gray-400 mb-4">
-              Join us in transforming modern industries through innovation and technology.
+              Join us in transforming modern industries through innovation and technology.<br/>
               Connect with industry leaders and showcase your skills.
             </p>
             <div className="flex space-x-4">
@@ -57,15 +57,15 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-gray-400">
-              <li>Email: info@hackathon2025.com</li>
-              <li>Phone: +1 (555) 123-4567</li>
-              <li>Location: Silicon Valley, CA</li>
+              <li>Email: contact@innovience.in</li>
+              <li>Phone: 8744915108,8252570419</li>
+              <li>Location: kl university , Guntur</li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-zinc-800 mt-8 pt-8 text-center text-gray-400">
-          <p>© 2025 Hackathon. All rights reserved.</p>
+          <p>© Code4Change. All rights reserved.</p>
         </div>
       </div>
     </footer>
