@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Users, UserPlus, Copy, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '../lib/supabase';
+import team from '../assets/team.jpg';
 
 type FormType = 'create' | 'join';
 
@@ -11,6 +12,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [teamCode, setTeamCode] = useState('');
   const [inviteLink, setInviteLink] = useState('');
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Safely get the auth token from localStorage
 const tokenData= localStorage.getItem('user');
@@ -32,11 +34,12 @@ const tokenData= localStorage.getItem('user');
   const handleCreateTeamSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setMessage(null);
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        toast.error('Please sign in first');
+        setMessage({ type: 'error', text: 'Please sign in first' });
         return;
       }
 
@@ -48,7 +51,7 @@ const tokenData= localStorage.getItem('user');
         .single();
 
       if (existingMember) {
-        toast.error('You are already in a team');
+        setMessage({ type: 'error', text: 'You are already in a team' });
         return;
       }
 
@@ -98,11 +101,11 @@ const tokenData= localStorage.getItem('user');
 
       setTeamCode(generatedTeamCode);
       setInviteLink(generatedInviteLink);
-      toast.success('Team created successfully!');
+      setMessage({ type: 'success', text: 'Team created successfully!' });
       setCreateTeamForm({ teamName: '', leadName: '', collegeName: '', email: '' });
     } catch (error) {
       console.error('Error creating team:', error);
-      toast.error('Failed to create team');
+      setMessage({ type: 'error', text: 'Failed to create team' });
     } finally {
       setLoading(false);
     }
@@ -111,11 +114,12 @@ const tokenData= localStorage.getItem('user');
   const handleJoinTeamSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setMessage(null);
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        toast.error('Please sign in first');
+        setMessage({ type: 'error', text: 'Please sign in first' });
         return;
       }
 
@@ -127,7 +131,7 @@ const tokenData= localStorage.getItem('user');
         .single();
 
       if (existingMember) {
-        toast.error('You are already in a team');
+        setMessage({ type: 'error', text: 'You are already in a team' });
         return;
       }
 
@@ -139,7 +143,7 @@ const tokenData= localStorage.getItem('user');
         .single();
 
       if (!team) {
-        toast.error('Invalid team code');
+        setMessage({ type: 'error', text: 'Invalid team code' });
         return;
       }
 
@@ -150,7 +154,7 @@ const tokenData= localStorage.getItem('user');
         .eq('team_id', team.id);
 
       if (members && members.length >= 5) {
-        toast.error('Team is full');
+        setMessage({ type: 'error', text: 'Team is full' });
         return;
       }
 
@@ -180,11 +184,11 @@ const tokenData= localStorage.getItem('user');
 
       if (joinError) throw joinError;
 
-      toast.success('Successfully joined the team!');
+      setMessage({ type: 'success', text: 'Successfully joined the team!' });
       setJoinTeamForm({ teamCode: '', name: '', collegeName: '', email: '' });
     } catch (error) {
       console.error('Error joining team:', error);
-      toast.error('Failed to join team');
+      setMessage({ type: 'error', text: 'Failed to join team' });
     } finally {
       setLoading(false);
     }
@@ -198,13 +202,21 @@ const tokenData= localStorage.getItem('user');
   };
 
   return (
-    <section className="py-20 bg-white">
+    <section 
+      className="py-20 relative"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${team})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-8">
             Join the Revolution
           </h2>
-          <p className="text-gray-600 text-center mb-12">
+          <p className="text-gray-200 text-center mb-12">
             Create or join a team to participate in the hackathon
           </p>
 
@@ -236,10 +248,23 @@ const tokenData= localStorage.getItem('user');
             </div>
           </div>
 
+          {/* On-Screen Message */}
+          {message && (
+            <div
+              className={`mb-6 p-4 rounded-lg text-center ${
+                message.type === 'success'
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-red-100 text-red-700'
+              }`}
+            >
+              {message.text}
+            </div>
+          )}
+
           {/* Create Team Form */}
           {formType === 'create' && (
             <div className="grid md:grid-cols-2 gap-12">
-              <form onSubmit={handleCreateTeamSubmit} className="space-y-6">
+              <form onSubmit={handleCreateTeamSubmit} className="space-y-6 bg-white p-8 rounded-xl shadow-lg">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Team Name
@@ -304,8 +329,8 @@ const tokenData= localStorage.getItem('user');
               </form>
 
               {/* Team Code Display */}
-              <div className="bg-gray-50 p-8 rounded-xl">
-                <h3 className="text-xl font-semibold mb-6">Team Information</h3>
+              <div className="bg-white p-8 rounded-xl shadow-lg">
+                <h3 className="text-xl font-semibold text-gray-900 mb-6">Team Information</h3>
                 {teamCode && (
                   <>
                     <div className="mb-6">
@@ -317,7 +342,7 @@ const tokenData= localStorage.getItem('user');
                           type="text"
                           value={teamCode}
                           readOnly
-                          className="flex-1 px-4 py-3 rounded-l-lg bg-white border border-r-0 border-gray-200"
+                          className="flex-1 px-4 py-3 rounded-l-lg bg-gray-50 border border-gray-200"
                         />
                         <button
                           onClick={() => copyToClipboard(teamCode)}
@@ -337,7 +362,7 @@ const tokenData= localStorage.getItem('user');
                           type="text"
                           value={inviteLink}
                           readOnly
-                          className="flex-1 px-4 py-3 rounded-l-lg bg-white border border-r-0 border-gray-200"
+                          className="flex-1 px-4 py-3 rounded-l-lg bg-gray-50 border border-gray-200"
                         />
                         <button
                           onClick={() => copyToClipboard(inviteLink)}
@@ -361,7 +386,7 @@ const tokenData= localStorage.getItem('user');
 
           {/* Join Team Form */}
           {formType === 'join' && (
-            <form onSubmit={handleJoinTeamSubmit} className="space-y-6 max-w-md mx-auto">
+            <form onSubmit={handleJoinTeamSubmit} className="space-y-6 max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Team Code
