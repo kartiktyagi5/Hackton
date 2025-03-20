@@ -25,8 +25,11 @@ export default function Hero({ onRegisterClick }: HeroProps) {
               Hack the Impossible
             </h1>
             <p className="text-xl text-gray-200 mb-8">
-              Join 500+ hackers for 48 hours of innovation, creativity, and breakthrough technology.
-              Build the next generation of AI, blockchain, and web3 solutions.
+            Join 1200+ brilliant minds for an action-packed 24-hour hackathon where you’ll 
+            turn bold ideas into reality! Work on real-world challenges, collaborate with top
+             mentors and compete for exciting prizes. Gain hands-on experience, build a standout portfolio,
+              and unlock career-changing opportunities with industry leaders.
+
             </p>
             <div className="flex space-x-4">
               <button 
