@@ -9,25 +9,25 @@ const timeline = [
   {
     icon: Users,
     title: 'Registration Opens',
-    date: 'March 15',
+    date: 'March 22',
     description: 'Start your journey by registering your team and project idea',
   },
   {
     icon: MessageCircle,
-    title: 'Team Formation',
-    date: 'March 30',
+    title: 'Registration Close',
+    date: 'March 31',
     description: 'Find your perfect teammates and brainstorm innovative solutions',
   },
   {
     icon: Code2,
-    title: 'Live Hackathon',
-    date: 'April 5-7',
-    description: '48 hours of coding, creativity, and collaboration',
+    title: 'Hackathon Date',
+    date: 'April 11-12',
+    description: '28 hours of coding, creativity, collaboration, and Mentoring-session ',
   },
   {
     icon: Trophy,
-    title: 'Demo Day & Awards',
-    date: 'April 7',
+    title: 'Evaluation & Prizes',
+    date: 'April 12',
     description: 'Present your project and celebrate achievements',
   },
 ];

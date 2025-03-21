@@ -41,14 +41,14 @@ export default function Hero({ onRegisterClick }: HeroProps) {
         <div className="flex flex-col md:flex-row items-center justify-between gap-12">
           <div className="max-w-2xl text-center md:text-left ">
             <h1 
-              className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6 leading-tight text-white "
-              style={{ animation: 'fadeInUp 1s ease-out ', width: '102%'}}
+              className="text-4xl sm:text-6xl md:text-6xl font-bold mb-6 leading-tight text-white "
+              style={{ animation: 'fadeInUp 1s ease-out ', width: '120%'}}
             >
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 ">
-                Code the Future,
+              Innovate Code Create,
               </span>
               <br />
-              <span style={{ animation: 'fadeInUp 1s ease-out 0.1s' }}>Hack the Impossible</span>
+              <span style={{ animation: 'fadeInUp 1s ease-out 0.1s' }}>a Sustainable Future</span>
             </h1>
             <p 
               className="text-xl text-gray-200 mb-8"
