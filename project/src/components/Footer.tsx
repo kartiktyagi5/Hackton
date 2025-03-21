@@ -1,5 +1,24 @@
 import React from 'react';
-import { Github, Twitter, Linkedin } from 'lucide-react';
+import { Youtube, Linkedin, Instagram } from 'lucide-react';
+
+// Custom Unstop SVG Icon
+const UnstopIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-6 h-6"
+  >
+    {/* Placeholder SVG path for Unstop logo */}
+    <path d="M12 2L2 22h20L12 2zM12 6l7 14H5l7-14z" />
+  </svg>
+);
 
 export default function Footer() {
   return (
@@ -10,18 +29,21 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-2">
             <h3 className="text-white font-bold text-xl mb-4">Code4Change</h3>
             <p className="text-gray-400 mb-4">
-              Join us in transforming modern industries through innovation and technology.<br/>
-              Connect with industry leaders and showcase your skills.
+              Join us in solving real-world challenges through innovation and technology.
+              Collaborate with NGOs and industry experts to create impact-driven solutions.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Github className="w-6 h-6" />
+              <a href="https://unstop.com/hackathons/code4change-kl-university-vijayawada-1436743" className="text-gray-400 hover:text-white transition-colors">
+                <UnstopIcon />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Twitter className="w-6 h-6" />
+              <a href="https://www.youtube.com/@Innovience" className="text-gray-400 hover:text-white transition-colors">
+                <Youtube className="w-6 h-6" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://www.linkedin.com/company/innovience-intelligence/?viewAsMember=true" className="text-gray-400 hover:text-white transition-colors">
                 <Linkedin className="w-6 h-6" />
+              </a>
+              <a href="https://www.instagram.com/innovience_interns?igsh=MWFkM3FsYzQ5MXo5ZQ==" className="text-gray-400 hover:text-white transition-colors">
+                <Instagram className="w-6 h-6" />
               </a>
             </div>
           </div>
@@ -58,7 +80,7 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-gray-400">
               <li>Email: contact@innovience.in</li>
-              <li>Phone: 8744915108,8252570419</li>
+              <li>Phone: 8744915108 , 8252570419</li>
               <li>Location: kl university , Guntur</li>
             </ul>
           </div>
