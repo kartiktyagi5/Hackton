@@ -30,7 +30,7 @@ export default function Footer() {
             <h3 className="text-white font-bold text-xl mb-4">Code4Change</h3>
             <p className="text-gray-400 mb-4">
               Join us in solving real-world challenges through innovation and technology.
-              Collaborate with NGOs and industry experts to create impact-driven solutions.
+              <br/>Collaborate with NGOs and industry experts to create impact-driven solutions.
             </p>
             <div className="flex space-x-4">
               <a href="https://unstop.com/hackathons/code4change-kl-university-vijayawada-1436743" className="text-gray-400 hover:text-white transition-colors">
