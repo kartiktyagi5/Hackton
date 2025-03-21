@@ -15,7 +15,7 @@ const timeline = [
   {
     icon: MessageCircle,
     title: 'Registration Close',
-    date: 'March 31',
+    date: 'April 7',
     description: 'Find your perfect teammates and brainstorm innovative solutions',
   },
   {
