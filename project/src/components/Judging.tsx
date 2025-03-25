@@ -88,8 +88,21 @@ export default function Judging() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="judging" className="py-20 bg-gray-50">
-      <div className="container mx-auto px-4">
+    <section 
+      ref={sectionRef} 
+      id="judging" 
+      className="py-20 relative"
+      style={{
+        background: 'linear-gradient(to bottom, #ffffff, #f0f4ff)' // Color fade effect
+      }}
+    >
+      {/* Decorative elements */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-1/4 left-10 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/3 right-20 w-40 h-40 bg-purple-500 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
         <h2 className="section-title text-3xl md:text-4xl font-bold text-center text-gray-900 mb-16">
           Judging Criteria
         </h2>
