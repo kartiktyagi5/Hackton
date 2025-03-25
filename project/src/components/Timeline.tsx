@@ -89,13 +89,13 @@ export default function Timeline() {
     <section
       ref={sectionRef}
       className="py-20 relative"
-      style={{
-        background: 'linear-gradient(to bottom, #000000, #1a1a1a, #333333)',
-      }}
       id="timeline"
+      style={{
+        background: 'linear-gradient(to bottom, #ffffff, #f0f4ff)', // Subtle color fade at the bottom
+      }}
     >
       <div className="container mx-auto px-6">
-        <h2 className="text-4xl font-bold text-center mb-16 text-white">
+        <h2 className="text-4xl font-bold text-center mb-16 text-gray-900">
           Event Timeline
         </h2>
 
