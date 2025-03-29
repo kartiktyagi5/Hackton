@@ -74,6 +74,7 @@ function Tracks() {
       style={{
         background: 'linear-gradient(to bottom, #ffffff, #f0f4ff)', // Subtle color fade at the bottom
       }}
+      id='tracks'
     >
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-8 text-black">Hackathon Problem Statements</h1>
