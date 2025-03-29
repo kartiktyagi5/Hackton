@@ -13,6 +13,7 @@ import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
 import AdminDashboard from './components/AdminDashboard';
 import JoinTeamPage from './components/JoinTeamPage';
+import ContactUs from './components/ContactUs';
 import { supabase } from './lib/supabase';
 
 const ADMIN_EMAIL = 'rohitkumarsingh2021@gmail.com';
@@ -93,6 +94,7 @@ function App() {
       <Prizes />
       <Judging />
       <Register />
+      <ContactUs/>
       <Footer />
     </div>
   );
