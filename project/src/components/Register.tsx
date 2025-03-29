@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Users, UserPlus, Copy, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '../lib/supabase';
-import team from '../assets/team.jpg';
+import team from '../assets/1.avif';
 
 type FormType = 'create' | 'join';
 
