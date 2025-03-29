@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   return (
-    <div className="bg-white text-gray-900 relative overflow-hidden">
+    <div className="bg-white text-gray-900 relative overflow-hidden" id='about'>
       {/* Decorative circles */}
       <div className="absolute inset-0">
         <div className="absolute top-20 right-10 w-32 h-32 bg-[#4166d5]/10 rounded-full blur-xl"></div>
@@ -110,6 +110,7 @@ function Features() {
       style={{
         background: 'linear-gradient(to bottom, #ffffff, #f0f4ff)' // Subtle color fade
       }}
+
     >
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-16">

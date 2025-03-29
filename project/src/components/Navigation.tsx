@@ -35,7 +35,7 @@ export default function Navigation({ onRegisterClick }: NavigationProps) {
           <a href="#feature" className="text-gray-600 hover:text-blue-600 transition-colors">Features</a>
           <a href="#timeline" className="text-gray-600 hover:text-blue-600 transition-colors">Timeline</a>
           <a href="#prizes" className="text-gray-600 hover:text-blue-600 transition-colors">Prizes</a>
-          <a href="#tracks" className="text-gray-600 hover:text-blue-600 transition-colors">Tracks</a>
+          <a href="#tracks" className="text-gray-600 hover:text-blue-600 transition-colors">Problem Statement</a>
         </div>
         {!session?
         <button 
