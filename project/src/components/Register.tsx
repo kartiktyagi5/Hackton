@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Users, UserPlus, Copy, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '../lib/supabase';
-import team from '../assets/1.avif';
+import team from '../assets/1.jpeg';
 
 type FormType = 'create' | 'join';
 
@@ -14,8 +14,7 @@ export default function Register() {
   const [inviteLink, setInviteLink] = useState('');
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // Safely get the auth token from localStorage
-const tokenData= localStorage.getItem('user');
+  const tokenData = localStorage.getItem('user');
   const [createTeamForm, setCreateTeamForm] = useState({
     teamName: '',
     leadName: '',
@@ -30,7 +29,6 @@ const tokenData= localStorage.getItem('user');
     email: tokenData || ''
   });
 
-
   const handleCreateTeamSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -43,7 +41,6 @@ const tokenData= localStorage.getItem('user');
         return;
       }
 
-      // Check if user is already in a team
       const { data: existingMember } = await supabase
         .from('team_members')
         .select('id')
@@ -55,11 +52,9 @@ const tokenData= localStorage.getItem('user');
         return;
       }
 
-      // Generate unique team code
       const generatedTeamCode = Math.random().toString(36).substring(2, 8).toUpperCase();
       const generatedInviteLink = `${window.location.origin}/join/${generatedTeamCode}`;
 
-      // Create team
       const { data: team, error: teamError } = await supabase
         .from('teams')
         .insert({
@@ -72,7 +67,6 @@ const tokenData= localStorage.getItem('user');
 
       if (teamError) throw teamError;
 
-      // Create or update user profile
       const { error: profileError } = await supabase
         .from('user_profiles')
         .upsert({
@@ -85,7 +79,6 @@ const tokenData= localStorage.getItem('user');
 
       if (profileError) throw profileError;
 
-      // Add leader as team member
       const { error: memberError } = await supabase
         .from('team_members')
         .insert({
@@ -123,7 +116,6 @@ const tokenData= localStorage.getItem('user');
         return;
       }
 
-      // Check if user is already in a team
       const { data: existingMember } = await supabase
         .from('team_members')
         .select('id')
@@ -135,7 +127,6 @@ const tokenData= localStorage.getItem('user');
         return;
       }
 
-      // Find team by code
       const { data: team } = await supabase
         .from('teams')
         .select('*')
@@ -147,7 +138,6 @@ const tokenData= localStorage.getItem('user');
         return;
       }
 
-      // Check team size
       const { data: members } = await supabase
         .from('team_members')
         .select('*')
@@ -158,7 +148,6 @@ const tokenData= localStorage.getItem('user');
         return;
       }
 
-      // Create or update user profile
       const { error: profileError } = await supabase
         .from('user_profiles')
         .upsert({
@@ -171,7 +160,6 @@ const tokenData= localStorage.getItem('user');
 
       if (profileError) throw profileError;
 
-      // Join team
       const { error: joinError } = await supabase
         .from('team_members')
         .insert({
@@ -203,32 +191,31 @@ const tokenData= localStorage.getItem('user');
 
   return (
     <section 
-      className="py-20 relative"
+      className="min-h-screen py-20 relative bg-gray-900 bg-fixed bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${team})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${team})`,
       }}
     >
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-8">
-            Join the Revolution
-          </h2>
-          <p className="text-gray-200 text-center mb-12">
-            Create or join a team to participate in the hackathon
-          </p>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Join the Revolution
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Create or join a team to participate in the hackathon
+            </p>
+          </div>
 
           {/* Toggle Buttons */}
           <div className="flex justify-center mb-12">
-            <div className="bg-gray-100 p-1 rounded-lg inline-flex">
+            <div className="bg-gray-800 p-1 rounded-lg inline-flex">
               <button
                 onClick={() => setFormType('create')}
                 className={`flex items-center px-6 py-3 rounded-md transition-all duration-300 ${
                   formType === 'create'
-                    ? 'bg-white text-blue-600 shadow-md'
-                    : 'text-gray-600 hover:text-blue-600'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'text-gray-300 hover:text-white'
                 }`}
               >
                 <Users className="w-5 h-5 mr-2" />
@@ -238,8 +225,8 @@ const tokenData= localStorage.getItem('user');
                 onClick={() => setFormType('join')}
                 className={`flex items-center px-6 py-3 rounded-md transition-all duration-300 ${
                   formType === 'join'
-                    ? 'bg-white text-blue-600 shadow-md'
-                    : 'text-gray-600 hover:text-blue-600'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'text-gray-300 hover:text-white'
                 }`}
               >
                 <UserPlus className="w-5 h-5 mr-2" />
@@ -263,7 +250,7 @@ const tokenData= localStorage.getItem('user');
 
           {/* Create Team Form */}
           {formType === 'create' && (
-            <div className="grid md:grid-cols-2 gap-12">
+            <div className="grid md:grid-cols-2 gap-8">
               <form onSubmit={handleCreateTeamSubmit} className="space-y-6 bg-white p-8 rounded-xl shadow-lg">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -315,7 +302,7 @@ const tokenData= localStorage.getItem('user');
                     className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 
                       focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                     required
-                    
+                    disabled
                   />
                 </div>
                 <button
@@ -331,7 +318,7 @@ const tokenData= localStorage.getItem('user');
               {/* Team Code Display */}
               <div className="bg-white p-8 rounded-xl shadow-lg">
                 <h3 className="text-xl font-semibold text-gray-900 mb-6">Team Information</h3>
-                {teamCode && (
+                {teamCode ? (
                   <>
                     <div className="mb-6">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -374,11 +361,13 @@ const tokenData= localStorage.getItem('user');
                       </div>
                     </div>
                   </>
-                )}
-                {!teamCode && (
-                  <p className="text-gray-600">
-                    Create a team to get your team code and invite link
-                  </p>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full">
+                    <Users className="w-16 h-16 text-gray-300 mb-4" />
+                    <p className="text-gray-600 text-center">
+                      Create a team to get your team code and invite link
+                    </p>
+                  </div>
                 )}
               </div>
             </div>
@@ -386,69 +375,71 @@ const tokenData= localStorage.getItem('user');
 
           {/* Join Team Form */}
           {formType === 'join' && (
-            <form onSubmit={handleJoinTeamSubmit} className="space-y-6 max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Team Code
-                </label>
-                <input
-                  type="text"
-                  value={joinTeamForm.teamCode}
-                  onChange={(e) => setJoinTeamForm({ ...joinTeamForm, teamCode: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 
-                    focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Your Name
-                </label>
-                <input
-                  type="text"
-                  value={joinTeamForm.name}
-                  onChange={(e) => setJoinTeamForm({ ...joinTeamForm, name: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 
-                    focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  College/University
-                </label>
-                <input
-                  type="text"
-                  value={joinTeamForm.collegeName}
-                  onChange={(e) => setJoinTeamForm({ ...joinTeamForm, collegeName: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 
-                    focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  value={joinTeamForm.email}
-                  onChange={(e) => setJoinTeamForm({ ...joinTeamForm, email: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 
-                    focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                  required
-                  
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold 
-                  transition-all duration-300 hover:bg-blue-700 hover:shadow-lg disabled:opacity-50"
-              >
-                {loading ? 'Joining Team...' : 'Join Team'}
-              </button>
-            </form>
+            <div className="max-w-md mx-auto">
+              <form onSubmit={handleJoinTeamSubmit} className="space-y-6 bg-white p-8 rounded-xl shadow-lg">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Team Code
+                  </label>
+                  <input
+                    type="text"
+                    value={joinTeamForm.teamCode}
+                    onChange={(e) => setJoinTeamForm({ ...joinTeamForm, teamCode: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 
+                      focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    value={joinTeamForm.name}
+                    onChange={(e) => setJoinTeamForm({ ...joinTeamForm, name: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 
+                      focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    College/University
+                  </label>
+                  <input
+                    type="text"
+                    value={joinTeamForm.collegeName}
+                    onChange={(e) => setJoinTeamForm({ ...joinTeamForm, collegeName: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 
+                      focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    value={joinTeamForm.email}
+                    onChange={(e) => setJoinTeamForm({ ...joinTeamForm, email: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 
+                      focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    required
+                    disabled
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold 
+                    transition-all duration-300 hover:bg-blue-700 hover:shadow-lg disabled:opacity-50"
+                >
+                  {loading ? 'Joining Team...' : 'Join Team'}
+                </button>
+              </form>
+            </div>
           )}
         </div>
       </div>

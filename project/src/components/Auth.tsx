@@ -38,6 +38,7 @@ export default function Auth({ onSuccess }: AuthProps) {
           email,
           password,
         });
+        localStorage.setItem('user',email);
         if (error) throw error;
         toast.success('Login successful!');
       }

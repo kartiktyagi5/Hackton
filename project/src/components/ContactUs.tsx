@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mail, Phone, MapPin, Youtube, Linkedin, Instagram } from 'lucide-react';
 
-// Custom Unstop SVG Icon (same as in your Footer component)
+// Custom Unstop SVG Icon
 const UnstopIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -105,6 +105,7 @@ export default function ContactUs() {
                 allowFullScreen
                 loading="lazy"
                 className="min-h-[400px]"
+                title="KL University Location"
               ></iframe>
             </div>
           </div>

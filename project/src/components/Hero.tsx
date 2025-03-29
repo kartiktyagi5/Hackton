@@ -45,16 +45,16 @@ export default function Hero({ onRegisterClick }: HeroProps) {
               style={{ animation: 'fadeInUp 1s ease-out ', width: '120%'}}
             >
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 ">
-              Innovate Code Create,
+              Revolutionize with Code,
               </span>
               <br />
-              <span style={{ animation: 'fadeInUp 1s ease-out 0.1s' }}>a Sustainable Future</span>
+              <span style={{ animation: 'fadeInUp 1s ease-out 0.1s' }}> Sustain with Innovation</span>
             </h1>
             <p 
               className="text-xl text-gray-200 mb-8"
               style={{ animation: 'fadeInUp 1s ease-out 0.2s' }}
             >
-              Join <span className="font-semibold text-blue-400">1200+ brilliant minds</span> for an action-packed 24-hour hackathon where you’ll turn bold ideas into reality! Work on real-world challenges, collaborate with top mentors, and compete for exciting prizes.
+              Join <span className="font-semibold text-blue-400">1200+ brilliant minds</span> for an action-packed 24-hour hackathon  turn bold ideas into reality tackle real-world challenges, and get mentorship from top industry experts, and compete for exciting prizes.
             </p>
             <div 
               className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start"

@@ -9,7 +9,7 @@ const timeline = [
   {
     icon: Users,
     title: 'Registration Opens',
-    date: 'March 22',
+    date: 'March 29',
     description: 'Start your journey by registering your team and project idea',
   },
   {
