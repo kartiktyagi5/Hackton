@@ -93,9 +93,7 @@ const PrizeSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-              Exclusive Rewards
-            </span>
+            <span className="text-black">Exclusive Rewards</span>
           </h2>
           <div className="w-24 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto mb-4"></div>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
