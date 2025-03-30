@@ -2,8 +2,11 @@ import React, { useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Brain, Users, Network, Target, Lightbulb, Handshake, Volume2, VolumeX } from 'lucide-react';
-import video from "../assets/Untitled design.mp4";
-
+import video from "../assets/intro.mp4";
+import klLogo from "../assets/kl.png";
+import startupLogo from "../assets/startup.png";
+import innovienceLogo from "../assets/innovience1.png";
+import alkov from "../assets/alcov.png";
 gsap.registerPlugin(ScrollTrigger);
 
 function AboutPage() {
@@ -20,15 +23,39 @@ function AboutPage() {
 
   return (
     <div className="bg-white text-gray-900 relative overflow-hidden">
-      {/* Animated background elements */}
+      
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-1/4 -left-20 w-64 h-64 bg-[#4166d5]/5 rounded-full blur-3xl animate-float"></div>
         <div className="absolute bottom-1/3 -right-20 w-72 h-72 bg-[#4166d5]/5 rounded-full blur-3xl animate-float-delay"></div>
       </div>
 
-      {/* Hero Section */}
-      <section className="relative pt-24 pb-12 px-6 max-w-4xl mx-auto text-center">
-        <h1 className="text-4xl md:text-5xl font-bold text-[#4166d5] mb-4">
+      
+      <section className="relative pt-16 pb-12 px-6 max-w-6xl mx-auto text-center">
+        <div className="flex flex-wrap justify-center items-center gap-14 mb-40 pt-12">
+          <img 
+            src={klLogo} 
+            alt="KL University Logo" 
+            className="h-28 md:h-36 object-contain" 
+          />
+          <div className="flex flex-col md:flex-row gap-14 items-center">
+            <img 
+              src={startupLogo} 
+              alt="Startup Society Logo" 
+              className="h-28 md:h-36 object-contain"  
+            />
+            <img 
+              src={innovienceLogo} 
+              alt="Innovience Logo" 
+              className="h-28 md:h-36 object-contain" 
+            />
+            <img 
+              src={alkov} 
+              alt="alkov Logo" 
+              className="h-28 md:h-36 object-contain" 
+            />
+          </div>
+        </div>
+        <h1 className="text-4xl md:text-5xl font-bold text-[#4166d5] mb-4 mt-16">
           About Code4Change
         </h1>
         <p className="text-lg md:text-xl text-gray-600 mb-8">
@@ -36,9 +63,8 @@ function AboutPage() {
         </p>
       </section>
 
-      {/* Content Sections */}
       <div className="relative z-30 bg-white">
-        {/* Introduction */}
+
         <section 
           ref={el => sectionRefs.current[0] = el}
           className="pb-16 px-6 max-w-5xl mx-auto"

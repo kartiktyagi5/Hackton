@@ -58,13 +58,7 @@ export default function Navigation({ onRegisterClick }: NavigationProps) {
           >
             About
           </a>
-          <a 
-            href="#feature" 
-            onClick={(e) => { e.preventDefault(); handleNavLinkClick('feature'); }}
-            className="text-gray-600 hover:text-blue-600 transition-colors"
-          >
-            Features
-          </a>
+         
           <a 
             href="#timeline" 
             onClick={(e) => { e.preventDefault(); handleNavLinkClick('timeline'); }}
