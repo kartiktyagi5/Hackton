@@ -209,6 +209,14 @@ function AboutPage() {
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-gray-800">Innovience</h3>
                 <p className="text-gray-600">Tech Partner providing mentorship and resources</p>
+                <a 
+                  href="https://www.innovience.in/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-[#4166d5] hover:underline mt-2 inline-block"
+                >
+                  Visit Website
+                </a>
               </div>
               
               <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-200">
