@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Brain, Users, Network, Target, Lightbulb, Handshake, Volume2, VolumeX } from 'lucide-react';
-import video from "../assets/intro1.mp4";
 import klLogo from "../assets/kl.png";
 import startupLogo from "../assets/startup.png";
 import innovienceLogo from "../assets/innovience1.png";
@@ -12,13 +11,9 @@ gsap.registerPlugin(ScrollTrigger);
 function AboutPage() {
   const sectionRefs = useRef([]);
   const [isMuted, setIsMuted] = useState(true);
-  const videoRef = useRef(null);
 
   const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
+    setIsMuted(!isMuted);
   };
 
   return (
@@ -94,14 +89,14 @@ function AboutPage() {
               </div>
             </div>
             <div className="md:w-1/2 rounded-xl overflow-hidden aspect-square shadow-lg relative">
-              <video 
-                ref={videoRef}
-                autoPlay 
-                muted={isMuted}
-                loop 
-                className="w-full h-full object-cover"
-                src={video}
-              />
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/syIuo6EP_Iw?autoplay=1&mute=1&loop=1&playlist=syIuo6EP_Iw"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
               <button 
                 onClick={toggleMute}
                 className="absolute bottom-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
