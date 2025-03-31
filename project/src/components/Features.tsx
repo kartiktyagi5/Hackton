@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Brain, Users, Network, Target, Lightbulb, Handshake, Volume2, VolumeX } from 'lucide-react';
-import video from "../assets/intro1.mp4";
+import video from "../components/intro1.mp4";
 import klLogo from "../assets/kl.png";
 import startupLogo from "../assets/startup.png";
 import innovienceLogo from "../assets/innovience1.png";
