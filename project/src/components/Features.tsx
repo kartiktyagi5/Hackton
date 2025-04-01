@@ -30,7 +30,7 @@ function AboutPage() {
       </div>
 
       
-      <section className="relative pt-16 pb-12 px-6 max-w-6xl mx-auto text-center">
+      <section className="relative pt-16 pb-12 px-6 max-w-6xl mx-auto text-center" id="about">
         <div className="flex flex-wrap justify-center items-center gap-14 mb-40 pt-12">
           <img 
             src={klLogo} 
