@@ -9,15 +9,15 @@ interface TeamMember {
   name: string;
   email: string;
   college: string;
-  isLeader: boolean;  // Keep isLeader here since it's in team_members
+  isLeader: boolean;
 }
 
 interface TeamDetails {
   id: string;
   name: string;
   code: string;
-  leader: TeamMember | null;  // Leader is separate
-  members: TeamMember[];     // Non-leader members
+  leader: TeamMember | null;
+  members: TeamMember[];
 }
 
 export default function JoinTeamPage() {
@@ -53,7 +53,6 @@ export default function JoinTeamPage() {
     try {
       setLoading(true);
       
-      // Get team details
       const { data: teamData, error: teamError } = await supabase
         .from('teams')
         .select('*')
@@ -66,7 +65,6 @@ export default function JoinTeamPage() {
         return;
       }
 
-      // Get team members (including leader)
       const { data: teamMembers } = await supabase
         .from('team_members')
         .select('*')
@@ -76,7 +74,6 @@ export default function JoinTeamPage() {
         throw new Error('No team members found');
       }
 
-      // Separate leader and members
       const leader = teamMembers.find(member => member.isLeader) || null;
       const members = teamMembers.filter(member => !member.isLeader);
 
@@ -120,14 +117,12 @@ export default function JoinTeamPage() {
         return;
       }
 
-      // Check if team is full (total unique members in team_members)
       const totalMembers = (team.leader ? 1 : 0) + team.members.length;
       if (totalMembers >= 5) {
-        toast.error('Team is already full');
+        toast.error('Team is full (max 5 members)');
         return;
       }
 
-      // Check if user is already in a team
       const { data: existingMember } = await supabase
         .from('team_members')
         .select('*')
@@ -139,7 +134,6 @@ export default function JoinTeamPage() {
         return;
       }
 
-      // Join team
       const { error: joinError } = await supabase
         .from('team_members')
         .insert({
@@ -148,12 +142,13 @@ export default function JoinTeamPage() {
           name: userDetails.name,
           email: userDetails.email,
           college: userDetails.college,
-          isLeader: false  // New members are not leaders
+          isLeader: false
         });
 
       if (joinError) throw joinError;
 
-      toast.success('Successfully joined the team!');
+      const newTotalMembers = totalMembers + 1;
+      toast.success(`Successfully joined the team! Current size: ${newTotalMembers}/5. ${newTotalMembers < 3 ? 'Add more members to reach the minimum of 3.' : 'Team is valid!'}`);
       navigate('/dashboard');
     } catch (error) {
       console.error('Error joining team:', error);
@@ -200,6 +195,11 @@ export default function JoinTeamPage() {
                 <span>{totalMembers}/5 members</span>
               </div>
             </div>
+            <p className="mt-2 text-sm text-blue-100">
+              {totalMembers < 3 
+                ? `Team is not valid yet (minimum 3 members required)` 
+                : `Team is valid (3-5 members)`}
+            </p>
           </div>
 
           {/* Team Leader */}
@@ -246,6 +246,9 @@ export default function JoinTeamPage() {
           {isAuthenticated && totalMembers < 5 && (
             <div className="px-6 py-8 border-t border-gray-200">
               <h2 className="text-xl font-semibold mb-6">Join This Team</h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Teams must have 3-5 members to be valid. Current size: {totalMembers}/5.
+              </p>
               <form onSubmit={handleJoinTeam} className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
