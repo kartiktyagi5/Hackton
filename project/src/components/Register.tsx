@@ -201,6 +201,7 @@ export default function Register() {
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${team})`,
       }}
+      id="register"
     >
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
