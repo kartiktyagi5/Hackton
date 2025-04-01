@@ -12,6 +12,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [teamCode, setTeamCode] = useState('');
   const [inviteLink, setInviteLink] = useState('');
+  const [teamSize, setTeamSize] = useState(0); // Track team size after creation
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const tokenData = localStorage.getItem('user');
@@ -94,8 +95,9 @@ export default function Register() {
 
       setTeamCode(generatedTeamCode);
       setInviteLink(generatedInviteLink);
-      setMessage({ type: 'success', text: 'Team created successfully!' });
-      setCreateTeamForm({ teamName: '', leadName: '', collegeName: '', email: '' });
+      setTeamSize(1); // Initially, only the leader is in the team
+      setMessage({ type: 'success', text: 'Team created successfully! Add at least 2 more members to make it valid.' });
+      setCreateTeamForm({ teamName: '', leadName: '', collegeName: '', email: tokenData || '' });
     } catch (error) {
       console.error('Error creating team:', error);
       setMessage({ type: 'error', text: 'Failed to create team' });
@@ -144,7 +146,7 @@ export default function Register() {
         .eq('team_id', team.id);
 
       if (members && members.length >= 5) {
-        setMessage({ type: 'error', text: 'Team is full' });
+        setMessage({ type: 'error', text: 'Team is full (max 5 members)' });
         return;
       }
 
@@ -172,8 +174,12 @@ export default function Register() {
 
       if (joinError) throw joinError;
 
-      setMessage({ type: 'success', text: 'Successfully joined the team!' });
-      setJoinTeamForm({ teamCode: '', name: '', collegeName: '', email: '' });
+      const newTeamSize = (members ? members.length : 0) + 1;
+      setMessage({ 
+        type: 'success', 
+        text: `Successfully joined the team! Current size: ${newTeamSize}/5. ${newTeamSize < 3 ? 'Add more members to reach the minimum of 3.' : 'Team is valid!'}` 
+      });
+      setJoinTeamForm({ teamCode: '', name: '', collegeName: '', email: tokenData || '' });
     } catch (error) {
       console.error('Error joining team:', error);
       setMessage({ type: 'error', text: 'Failed to join team' });
@@ -203,7 +209,7 @@ export default function Register() {
               Join the Revolution
             </h2>
             <p className="text-gray-300 max-w-2xl mx-auto">
-              Create or join a team to participate in the hackathon
+              Create or join a team to participate in the hackathon. Teams must have 3-5 members to be valid.
             </p>
           </div>
 
@@ -340,7 +346,7 @@ export default function Register() {
                         </button>
                       </div>
                     </div>
-                    <div>
+                    <div className="mb-6">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Invite Link
                       </label>
@@ -360,6 +366,27 @@ export default function Register() {
                         </button>
                       </div>
                     </div>
+                    <div className="mb-6">
+                      <p className={`text-sm ${teamSize < 3 ? 'text-red-600' : 'text-green-600'}`}>
+                        Current Team Size: {teamSize}/5 
+                        {teamSize < 3 ? ' (Not valid yet - minimum 3 members required)' : ' (Valid team size)'}
+                      </p>
+                    </div>
+                    {/* Guidelines and Procedure */}
+                    <div className="mt-6">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-4">How to Invite Teammates</h4>
+                      <ol className="list-decimal list-inside text-gray-700 space-y-2 text-sm">
+                        <li>Ask your teammates to sign up on the platform first using their email address.</li>
+                        <li>Share the <strong>Invite Link</strong> above with your teammates.</li>
+                        <li>Instruct them to go to the "Join Team" section after signing up.</li>
+                        <li>They should paste the <strong>Team Code</strong> from the invite link into the "Team Code" field.</li>
+                        <li>They’ll need to fill in their name, college, and email, then click "Join Team".</li>
+                        <li>Once they join, they’ll be added to your team (minimum 3, maximum 5 members).</li>
+                      </ol>
+                      <p className="mt-4 text-sm text-gray-600">
+                        <strong>Note:</strong> Your team must have at least 3 members to be valid for the hackathon, and cannot exceed 5 members. Invite teammates promptly to meet the minimum requirement.
+                      </p>
+                    </div>
                   </>
                 ) : (
                   <div className="flex flex-col items-center justify-center h-full">
@@ -376,6 +403,14 @@ export default function Register() {
           {/* Join Team Form */}
           {formType === 'join' && (
             <div className="max-w-md mx-auto">
+              <div className="mb-6 text-center">
+                <p className="text-white text-lg font-medium">
+                  Before joining, please ensure you’ve signed up with your email address.
+                </p>
+                <p className="text-gray-300 mt-2">
+                  Ask your team leader for the invite link, then paste the team code below. Teams need 3-5 members to be valid.
+                </p>
+              </div>
               <form onSubmit={handleJoinTeamSubmit} className="space-y-6 bg-white p-8 rounded-xl shadow-lg">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -388,6 +423,7 @@ export default function Register() {
                     className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 
                       focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                     required
+                    placeholder="e.g., X7K9P2"
                   />
                 </div>
                 <div>
