@@ -242,7 +242,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
             <h2 className="text-2xl font-bold text-gray-900 mb-4">No Team Found</h2>
             <p className="text-gray-600">Create or join a team to get started.</p>
             <button
-              onClick={() => navigate('/#register')}
+              onClick={() => navigate('/')}
               className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
             >
               Go to Register
