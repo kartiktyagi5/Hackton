@@ -68,7 +68,7 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#register" className="text-gray-400 hover:text-white transition-colors">
+                <a href="/auth" className="text-gray-400 hover:text-white transition-colors">
                   Register
                 </a>
               </li>
