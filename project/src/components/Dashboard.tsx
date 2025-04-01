@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { LogOut, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import TeamChat from './TeamChat'; // Import the TeamChat component
 
 interface Team {
   id: string;
@@ -28,6 +29,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
   const [team, setTeam] = useState<Team | null>(null);
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentUserId, setCurrentUserId] = useState<string>('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,6 +41,8 @@ export default function Dashboard({ onLogout }: DashboardProps) {
       setLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
+      
+      setCurrentUserId(user.id);
 
       let currentTeam = null;
 
@@ -185,57 +189,67 @@ export default function Dashboard({ onLogout }: DashboardProps) {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {team ? (
-          <div className="bg-white shadow rounded-lg p-6">
-            {/* Team Info */}
-            <div className="border-b border-gray-200 pb-4 mb-4">
-              <h2 className="text-2xl font-bold text-gray-900">Team: {team.name}</h2>
-              <p className="text-sm text-gray-500">Team Code: {team.code}</p>
-              <div className="flex items-center mt-2">
-                <Users className="h-5 w-5 text-gray-500 mr-2" />
-                <p className="text-sm text-gray-500">Total Members: {totalMembers}/5</p>
-              </div>
-              <p className={`text-sm mt-1 ${totalMembers < 3 ? 'text-red-600' : 'text-green-600'}`}>
-                {totalMembers < 3 
-                  ? `Team is not valid yet (minimum 3 members required)` 
-                  : `Team is valid (3-5 members)`}
-              </p>
-            </div>
-
-            {/* Team Members */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-gray-900">Team Members</h3>
-              {members.map((member) => (
-                <div key={member.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                  <div>
-                    <p className="font-medium text-gray-900">{member.name}</p>
-                    <p className="text-sm text-gray-500">{member.email}</p>
-                    <p className="text-sm text-gray-500">{member.college}</p>
-                    {member.isLeader && (
-                      <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-lg">
-                        Leader
-                      </span>
-                    )}
-                  </div>
-                  {!member.isLeader && (
-                    <button
-                      onClick={handleLeaveTeam}
-                      className="text-red-600 hover:text-red-700 text-sm font-medium"
-                    >
-                      Leave Team
-                    </button>
-                  )}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left column: Team Info */}
+            <div className="bg-white shadow rounded-lg p-6">
+              {/* Team Info */}
+              <div className="border-b border-gray-200 pb-4 mb-4">
+                <h2 className="text-2xl font-bold text-gray-900">Team: {team.name}</h2>
+                <p className="text-sm text-gray-500">Team Code: {team.code}</p>
+                <div className="flex items-center mt-2">
+                  <Users className="h-5 w-5 text-gray-500 mr-2" />
+                  <p className="text-sm text-gray-500">Total Members: {totalMembers}/5</p>
                 </div>
-              ))}
-            </div>
-
-            {/* Additional Info */}
-            {totalMembers < 3 && (
-              <div className="mt-6 p-4 bg-yellow-50 rounded-lg text-center">
-                <p className="text-sm text-yellow-700">
-                  Your team needs at least 3 members to be valid for the hackathon. Share your team code ({team.code}) with others to invite them!
+                <p className={`text-sm mt-1 ${totalMembers < 3 ? 'text-red-600' : 'text-green-600'}`}>
+                  {totalMembers < 3 
+                    ? `Team is not valid yet (minimum 3 members required)` 
+                    : `Team is valid (3-5 members)`}
                 </p>
               </div>
-            )}
+
+              {/* Team Members */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-gray-900">Team Members</h3>
+                {members.map((member) => (
+                  <div key={member.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-gray-900">{member.name}</p>
+                      <p className="text-sm text-gray-500">{member.email}</p>
+                      <p className="text-sm text-gray-500">{member.college}</p>
+                      {member.isLeader && (
+                        <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-lg">
+                          Leader
+                        </span>
+                      )}
+                    </div>
+                    {!member.isLeader && member.user_id === currentUserId && (
+                      <button
+                        onClick={handleLeaveTeam}
+                        className="text-red-600 hover:text-red-700 text-sm font-medium"
+                      >
+                        Leave Team
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Additional Info */}
+              {totalMembers < 3 && (
+                <div className="mt-6 p-4 bg-yellow-50 rounded-lg text-center">
+                  <p className="text-sm text-yellow-700">
+                    Your team needs at least 3 members to be valid for the hackathon. Share your team code ({team.code}) with others to invite them!
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Right column: Team Chat */}
+            <div>
+              {team && currentUserId && (
+                <TeamChat teamId={team.id} currentUserId={currentUserId} />
+              )}
+            </div>
           </div>
         ) : (
           <div className="text-center">
