@@ -34,7 +34,6 @@ export default function Dashboard({ onLogout }: DashboardProps) {
     loadTeamData();
   }, []);
 
-  // ✅ Load team and members data
   const loadTeamData = async () => {
     try {
       setLoading(true);
@@ -43,7 +42,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
 
       let currentTeam = null;
 
-      // ✅ Check if user is a team leader
+      // Check if user is a team leader
       const { data: leaderTeam } = await supabase
         .from('teams')
         .select('*')
@@ -53,7 +52,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
       if (leaderTeam) {
         currentTeam = leaderTeam;
       } else {
-        // ✅ Check if user is a team member
+        // Check if user is a team member
         const { data: memberTeam } = await supabase
           .from('team_members')
           .select(`team_id, teams (*)`)
@@ -68,15 +67,15 @@ export default function Dashboard({ onLogout }: DashboardProps) {
       if (currentTeam) {
         setTeam(currentTeam);
 
-        // ✅ Fetch team members
+        // Fetch team members
         const { data: teamMembers } = await supabase
           .from('team_members')
-          .select(`id, user_id, name, email, college,isLeader`)
+          .select(`id, user_id, name, email, college, isLeader`)
           .eq('team_id', currentTeam.id);
 
         let allMembers: TeamMember[] = teamMembers || [];
 
-        // ✅ Fetch leader details and include in member list
+        // Fetch leader details and include in member list
         const { data: leaderData } = await supabase
           .from('user_profiles')
           .select('user_id, full_name, email, college')
@@ -85,7 +84,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
 
         if (leaderData) {
           const leaderMember: TeamMember = {
-            id: leaderData.user_id, // ✅ Use user_id as ID to avoid key conflict
+            id: leaderData.user_id,
             user_id: leaderData.user_id,
             name: leaderData.full_name,
             email: leaderData.email,
@@ -93,12 +92,11 @@ export default function Dashboard({ onLogout }: DashboardProps) {
             isLeader: true
           };
 
-          // ✅ Add leader to the list if not already included
           const isLeaderInList = allMembers.some(
             (member) => member.user_id === leaderMember.user_id
           );
           if (!isLeaderInList) {
-            allMembers.unshift(leaderMember); // ✅ Add leader at the top
+            allMembers.unshift(leaderMember); // Add leader at the top
           }
         }
 
@@ -112,7 +110,6 @@ export default function Dashboard({ onLogout }: DashboardProps) {
     }
   };
 
-  // ✅ Handle leaving team
   const handleLeaveTeam = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -134,7 +131,6 @@ export default function Dashboard({ onLogout }: DashboardProps) {
     }
   };
 
-  // ✅ Handle logout
   const handleLogout = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -147,7 +143,6 @@ export default function Dashboard({ onLogout }: DashboardProps) {
     }
   };
 
-  // ✅ Loading state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -156,9 +151,11 @@ export default function Dashboard({ onLogout }: DashboardProps) {
     );
   }
 
+  const totalMembers = members.length;
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* ✅ Navbar */}
+      {/* Navbar */}
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -185,18 +182,26 @@ export default function Dashboard({ onLogout }: DashboardProps) {
         </div>
       </nav>
 
-      {/* ✅ Main Content */}
+      {/* Main Content */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {team ? (
           <div className="bg-white shadow rounded-lg p-6">
-            {/* ✅ Team Info */}
+            {/* Team Info */}
             <div className="border-b border-gray-200 pb-4 mb-4">
               <h2 className="text-2xl font-bold text-gray-900">Team: {team.name}</h2>
               <p className="text-sm text-gray-500">Team Code: {team.code}</p>
-              <p className="text-sm text-gray-500">Total Members: {members.length}</p>
+              <div className="flex items-center mt-2">
+                <Users className="h-5 w-5 text-gray-500 mr-2" />
+                <p className="text-sm text-gray-500">Total Members: {totalMembers}/5</p>
+              </div>
+              <p className={`text-sm mt-1 ${totalMembers < 3 ? 'text-red-600' : 'text-green-600'}`}>
+                {totalMembers < 3 
+                  ? `Team is not valid yet (minimum 3 members required)` 
+                  : `Team is valid (3-5 members)`}
+              </p>
             </div>
 
-            {/* ✅ Team Members */}
+            {/* Team Members */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium text-gray-900">Team Members</h3>
               {members.map((member) => (
@@ -222,11 +227,26 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                 </div>
               ))}
             </div>
+
+            {/* Additional Info */}
+            {totalMembers < 3 && (
+              <div className="mt-6 p-4 bg-yellow-50 rounded-lg text-center">
+                <p className="text-sm text-yellow-700">
+                  Your team needs at least 3 members to be valid for the hackathon. Share your team code ({team.code}) with others to invite them!
+                </p>
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">No Team Found</h2>
             <p className="text-gray-600">Create or join a team to get started.</p>
+            <button
+              onClick={() => navigate('/register')}
+              className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            >
+              Go to Register
+            </button>
           </div>
         )}
       </main>
