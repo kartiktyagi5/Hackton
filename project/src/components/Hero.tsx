@@ -59,7 +59,7 @@ export default function Hero({ onRegisterClick }: HeroProps) {
             <button 
               onClick={(e) => {
                 createRipple(e);
-                navigate('/auth');
+                navigate('/#register');
               }}
               className="px-6 py-3 sm:px-8 sm:py-3 bg-blue-600 hover:bg-blue-700 rounded-full text-white font-semibold 
               transition-all duration-300 hover:shadow-lg hover:scale-105 relative overflow-hidden
