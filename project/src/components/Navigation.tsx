@@ -87,7 +87,7 @@ export default function Navigation({ onRegisterClick }: NavigationProps) {
               className="px-4 py-1.5 sm:px-6 sm:py-2 bg-blue-600 hover:bg-blue-700 rounded-full text-white font-semibold 
               transition-all duration-300 hover:shadow-lg hover:scale-105 text-sm sm:text-base"
             >
-              Register Now
+              Sign in
             </button>
           ) : (
             <button 
@@ -108,7 +108,7 @@ export default function Navigation({ onRegisterClick }: NavigationProps) {
               className="mr-3 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 rounded-full text-white font-semibold 
               transition-all duration-300 hover:shadow-lg text-sm"
             >
-              Register
+             Sign in
             </button>
           ) : (
             <button 
