@@ -16,7 +16,7 @@ import JoinTeamPage from './components/JoinTeamPage';
 import ContactUs from './components/ContactUs';
 import { supabase } from './lib/supabase';
 
-const ADMIN_EMAIL = 'rohitkumarsingh2021@gmail.com';
+const ADMIN_EMAIL = 'rohitkumarsingh2021@gmail.com' || 'tyagikartik576@gmail.com';
 
 // Protected route wrapper component
 const ProtectedRoute = ({ 
