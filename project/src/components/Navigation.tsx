@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Code2, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import codeImage from '../assets/code.png'; // Import the image
 
 interface NavigationProps {
   onRegisterClick: () => void;
@@ -43,7 +44,8 @@ export default function Navigation({ onRegisterClick }: NavigationProps) {
     <nav className="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
       <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <Code2 className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
+          
+          <img src={codeImage} alt="Code icon" className="w-6 h-6 sm:w-8 sm:h-8" />
           <span className="text-lg sm:text-xl font-bold text-gradient">
             CodeForChange
           </span>
@@ -87,7 +89,7 @@ export default function Navigation({ onRegisterClick }: NavigationProps) {
               className="px-4 py-1.5 sm:px-6 sm:py-2 bg-blue-600 hover:bg-blue-700 rounded-full text-white font-semibold 
               transition-all duration-300 hover:shadow-lg hover:scale-105 text-sm sm:text-base"
             >
-              Sign in
+              Sign In
             </button>
           ) : (
             <button 
@@ -108,7 +110,7 @@ export default function Navigation({ onRegisterClick }: NavigationProps) {
               className="mr-3 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 rounded-full text-white font-semibold 
               transition-all duration-300 hover:shadow-lg text-sm"
             >
-             Sign in
+              Register
             </button>
           ) : (
             <button 
