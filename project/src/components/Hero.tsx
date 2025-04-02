@@ -56,17 +56,15 @@ export default function Hero({ onRegisterClick }: HeroProps) {
           <div 
             className="flex flex-col sm:flex-row gap-4 animate-fadeInUp delay-300"
           >
-            <button 
-              onClick={(e) => {
-                createRipple(e);
-                navigate('/#register');
-              }}
+            <a 
+              href="#register"
+              onClick={createRipple}
               className="px-6 py-3 sm:px-8 sm:py-3 bg-blue-600 hover:bg-blue-700 rounded-full text-white font-semibold 
               transition-all duration-300 hover:shadow-lg hover:scale-105 relative overflow-hidden
               text-sm sm:text-base"
             >
               Register Now
-            </button>
+            </a>
             
             <a 
               href="#about"
