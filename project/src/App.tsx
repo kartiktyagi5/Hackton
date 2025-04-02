@@ -16,7 +16,7 @@ import JoinTeamPage from './components/JoinTeamPage';
 import ContactUs from './components/ContactUs';
 import { supabase } from './lib/supabase';
 
-const ADMIN_EMAIL = 'rohitkumarsingh2021@gmail.com' || 'tyagikartik576@gmail.com';
+const ADMIN_EMAIL = 'rohitkumarsingh2021@gmail.com';
 
 // Protected route wrapper component
 const ProtectedRoute = ({ 
@@ -37,7 +37,7 @@ const ProtectedRoute = ({
   const checkUser = async () => {
     const { data: { session: userSession } } = await supabase.auth.getSession();
     setSession(!!userSession);
-    setIsAdmin(userSession?.user?.email === ADMIN_EMAIL);
+    setIsAdmin(userSession?.user?.email === ADMIN_EMAIL || 'tyagikartik576@gmail.com');
   };
 
   if (session === null) {
