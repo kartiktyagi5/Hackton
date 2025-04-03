@@ -68,7 +68,7 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="/auth" className="text-gray-400 hover:text-white transition-colors">
+                <a href="#register" className="text-gray-400 hover:text-white transition-colors">
                   Register
                 </a>
               </li>
@@ -81,7 +81,7 @@ export default function Footer() {
             <ul className="space-y-2 text-gray-400">
               <li>Email: contact@innovience.in</li>
               <li>Phone: 8744915108 , 8252570419</li>
-              <li>Location: kl university , Guntur</li>
+              <li>Location: KL university , Guntur</li>
             </ul>
           </div>
         </div>
