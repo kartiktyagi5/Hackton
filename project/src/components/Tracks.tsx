@@ -1,5 +1,5 @@
 import React from 'react';
-import pdf from "../assets/ps.pdf";
+import pdf from "../assets/ps2.pdf";
 
 function Tracks() {
   return (
