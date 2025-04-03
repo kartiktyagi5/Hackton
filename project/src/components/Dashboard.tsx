@@ -10,6 +10,7 @@ interface Team {
   name: string;
   code: string;
   leader_id: string;
+  problem_statement?: string; // Add problem_statement to the Team interface
 }
 
 interface TeamMember {
@@ -25,12 +26,55 @@ interface DashboardProps {
   onLogout: () => void;
 }
 
+const domains = {
+  'SDRE': [
+    'EV Route & Charging Optimization (SDRE-1)',
+    'Carbon Footprint Tracker (SDRE-2)',
+    'Community-Based Food Donation Platform (SDRE-3)',
+    'EV Subscription & Roadside Assistance Platform (SDRE-4)',
+    'Sustainable Waste Management System (SDRE-5)',
+  ],
+  'AFGI': [
+    'Agricultural Product Marketplace (AFGI-1)',
+    'AI-Powered Pest & Disease Detection (AFGI-2)',
+    'Waste Reduction & Circular Economy (AFGI-3)',
+    'Digital Crop Monitoring System for Food Security (AFGI-4)',
+    'Urban Farming Management Software (AFGI-5)',
+  ],
+  'MHB': [
+    'Patient Appointment Scheduling System (MHB-1)',
+    'Medical Research Data Management System (MHB-2)',
+    'Bioinformatics Data Visualization Tool (MHB-3)',
+    'Nutrition & Diet Management (MHB-4)',
+    'Real-Time Blood Bank & Organ Donation Registry (MHB-5)',
+  ],
+  'SEFB': [
+    'Financial Literacy Mobile App (SEFB-1)',
+    'Business Performance Analytics Tool (SEFB-2)',
+    'FinTech: SME Financial Management & Credit Access (SEFB-3)',
+    'The Ultimate Startup Ecosystem Platform (SEFB-4)',
+    'Startup & Business Education Hub (SEFB-5)',
+  ],
+  'OISSEE':[
+    'Open Innovation,Student Startup and Entrepreneurial Ecosystems(OISSEE-1)',
+  ],
+};
+
 export default function Dashboard({ onLogout }: DashboardProps) {
   const [team, setTeam] = useState<Team | null>(null);
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<string>('');
+  const [selectedDomain, setSelectedDomain] = useState<string>('');
+  const [selectedProblem, setSelectedProblem] = useState<string>('');
+  const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
+
+  // Define deadline in UTC to avoid time zone issues
+  const deadline = new Date('2025-04-12T06:59:59Z'); // April 11, 2025, 11:59 PM PDT = April 12, 2025, 06:59 AM UTC
+  const currentDate = new Date(); // Current date in local time
+  const currentTimestamp = currentDate.getTime();
+  const deadlineTimestamp = deadline.getTime();
 
   useEffect(() => {
     loadTeamData();
@@ -105,6 +149,14 @@ export default function Dashboard({ onLogout }: DashboardProps) {
         }
 
         setMembers(allMembers);
+
+        // Set initial selected domain and problem if problem_statement exists
+        if (currentTeam.problem_statement) {
+          const [domain, problemCode] = currentTeam.problem_statement.split('-');
+          const problemIndex = parseInt(problemCode) - 1;
+          setSelectedDomain(domain);
+          setSelectedProblem(domains[domain][problemIndex] || '');
+        }
       }
     } catch (error) {
       console.error('Error loading team data:', error);
@@ -147,6 +199,29 @@ export default function Dashboard({ onLogout }: DashboardProps) {
     }
   };
 
+  const handleProblemStatementSave = async () => {
+    if (!team || !selectedProblem) return;
+
+    try {
+      setSaving(true);
+      const problemCode = selectedProblem.match(/\(([^)]+)\)/)?.[1]; // Extract code like "SDRE-1"
+      const { error } = await supabase
+        .from('teams')
+        .update({ problem_statement: problemCode })
+        .eq('id', team.id);
+
+      if (error) throw error;
+
+      setTeam({ ...team, problem_statement: problemCode });
+      toast.success('Problem statement updated successfully');
+    } catch (error) {
+      console.error('Error saving problem statement:', error);
+      toast.error('Failed to update problem statement');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -156,6 +231,8 @@ export default function Dashboard({ onLogout }: DashboardProps) {
   }
 
   const totalMembers = members.length;
+  const isLeader = currentUserId === team?.leader_id; // Determine if the current user is the leader
+  const canEditProblemStatement = isLeader && currentTimestamp < deadlineTimestamp;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -205,6 +282,71 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                     ? `Team is not valid yet (minimum 3 members required)` 
                     : `Team is valid (3-5 members)`}
                 </p>
+              </div>
+
+              {/* Problem Statement */}
+              <div className="mb-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Problem Statement</h3>
+                {isLeader ? (
+                  <>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Select Domain</label>
+                        <select
+                          value={selectedDomain}
+                          onChange={(e) => {
+                            setSelectedDomain(e.target.value);
+                            setSelectedProblem(''); // Reset problem when domain changes
+                          }}
+                          disabled={!canEditProblemStatement}
+                          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
+                        >
+                          <option value="">Select a domain</option>
+                          {Object.keys(domains).map((domain) => (
+                            <option key={domain} value={domain}>{domain}</option>
+                          ))}
+                        </select>
+                      </div>
+                      {selectedDomain && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Select Problem Statement</label>
+                          <select
+                            value={selectedProblem}
+                            onChange={(e) => setSelectedProblem(e.target.value)}
+                            disabled={!canEditProblemStatement}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
+                          >
+                            <option value="">Select a problem statement</option>
+                            {domains[selectedDomain].map((problem) => (
+                              <option key={problem} value={problem}>{problem}</option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+                    </div>
+                    {canEditProblemStatement ? (
+                      <button
+                        onClick={handleProblemStatementSave}
+                        disabled={saving || !selectedProblem}
+                        className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg font-semibold transition-all duration-300 hover:bg-blue-700 disabled:opacity-50"
+                      >
+                        {saving ? 'Saving...' : 'Save Problem Statement'}
+                      </button>
+                    ) : (
+                      <p className="mt-4 text-sm text-red-600">
+                        Problem statement selection is locked after April 11, 2025.
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-600">
+                    Selected Problem Statement: {team.problem_statement ? 
+                      domains[team.problem_statement.split('-')[0]]?.find(p => p.includes(team.problem_statement)) || 'Not set' 
+                      : 'Not set'}
+                    <br />
+                    <span className="text-xs text-gray-500">Only the team leader can set the problem statement.</span>
+                  </p>
+                )}
               </div>
 
               {/* Team Members */}
