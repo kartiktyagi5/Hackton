@@ -9,6 +9,7 @@ interface TeamWithMembers {
   id: string;
   name: string;
   code: string;
+  problem_statement?: string; // Add problem_statement to the interface
   members: {
     name: string;
     email: string;
@@ -36,6 +37,7 @@ export default function AdminDashboard() {
           id,
           name,
           code,
+          problem_statement, // Include problem_statement in the select
           team_members (
             name,
             email,
@@ -50,10 +52,11 @@ export default function AdminDashboard() {
         id: team.id,
         name: team.name,
         code: team.code,
+        problem_statement: team.problem_statement || '', // Default to empty string if null
         members: team.team_members || [],
-      }));
+      })) || [];
 
-      setTeams(teamsWithMembers || []);
+      setTeams(teamsWithMembers);
     } catch (error) {
       console.error('Error loading teams:', error);
       toast.error('Failed to load teams');
@@ -75,6 +78,7 @@ export default function AdminDashboard() {
         return {
           'Team Name': team.name,
           'Team Code': team.code,
+          'Problem Statement': team.problem_statement || 'Not set', // Add problem statement
           'Total Members': totalMembers,
           'Remaining Slots': 5 - totalMembers,
           'Validity': isValid ? 'Valid' : 'Invalid (needs 3-5 members)',
@@ -94,6 +98,7 @@ export default function AdminDashboard() {
         team.members.map(member => ({
           'Team Name': team.name,
           'Team Code': team.code,
+          'Problem Statement': team.problem_statement || 'Not set', // Add problem statement
           'Member Name': member.name,
           'Email': member.email,
           'College': member.college,
@@ -160,6 +165,9 @@ export default function AdminDashboard() {
                     <div>
                       <h2 className="text-xl font-semibold text-gray-900">{team.name}</h2>
                       <p className="text-sm text-gray-500">Code: {team.code}</p>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Problem Statement: {team.problem_statement || 'Not set'}
+                      </p>
                     </div>
                     <div className="flex items-center bg-blue-100 px-3 py-1 rounded-full">
                       <Users className="w-4 h-4 text-blue-600 mr-1" />
