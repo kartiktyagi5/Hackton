@@ -37,7 +37,7 @@ export default function AdminDashboard() {
           id,
           name,
           code,
-          problem_statement, // Include problem_statement in the select
+          problem_statement, 
           team_members (
             name,
             email,
