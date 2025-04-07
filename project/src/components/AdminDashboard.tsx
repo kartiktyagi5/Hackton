@@ -9,7 +9,7 @@ interface TeamWithMembers {
   id: string;
   name: string;
   code: string;
-  problem_statement?: string; // Add problem_statement to the interface
+  problem_statement?: string;
   members: {
     name: string;
     email: string;
@@ -20,11 +20,33 @@ interface TeamWithMembers {
 
 export default function AdminDashboard() {
   const [teams, setTeams] = useState<TeamWithMembers[]>([]);
+  const [totalTeams, setTotalTeams] = useState(0); // State for total teams
+  const [totalMembers, setTotalMembers] = useState(0); // State for total members
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     loadTeams();
+    // Subscribe to real-time updates
+    const teamsSubscription = supabase
+      .channel('teams-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'teams' }, (payload) => {
+        loadTeams(); // Reload teams on any change
+      })
+      .subscribe();
+
+    const membersSubscription = supabase
+      .channel('team_members-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'team_members' }, (payload) => {
+        loadTeams(); // Reload teams on any change to reflect member updates
+      })
+      .subscribe();
+
+    // Cleanup subscriptions on unmount
+    return () => {
+      supabase.removeChannel(teamsSubscription);
+      supabase.removeChannel(membersSubscription);
+    };
   }, []);
 
   const loadTeams = async () => {
@@ -37,7 +59,7 @@ export default function AdminDashboard() {
           id,
           name,
           code,
-          problem_statement, 
+          problem_statement,
           team_members (
             name,
             email,
@@ -52,11 +74,13 @@ export default function AdminDashboard() {
         id: team.id,
         name: team.name,
         code: team.code,
-        problem_statement: team.problem_statement || '', // Default to empty string if null
+        problem_statement: team.problem_statement || '',
         members: team.team_members || [],
       })) || [];
 
       setTeams(teamsWithMembers);
+      setTotalTeams(teamsWithMembers.length); // Update total teams
+      setTotalMembers(teamsWithMembers.reduce((sum, team) => sum + team.members.length, 0)); // Sum all members
     } catch (error) {
       console.error('Error loading teams:', error);
       toast.error('Failed to load teams');
@@ -78,7 +102,7 @@ export default function AdminDashboard() {
         return {
           'Team Name': team.name,
           'Team Code': team.code,
-          'Problem Statement': team.problem_statement || 'Not set', // Add problem statement
+          'Problem Statement': team.problem_statement || 'Not set',
           'Total Members': totalMembers,
           'Remaining Slots': 5 - totalMembers,
           'Validity': isValid ? 'Valid' : 'Invalid (needs 3-5 members)',
@@ -98,7 +122,7 @@ export default function AdminDashboard() {
         team.members.map(member => ({
           'Team Name': team.name,
           'Team Code': team.code,
-          'Problem Statement': team.problem_statement || 'Not set', // Add problem statement
+          'Problem Statement': team.problem_statement || 'Not set',
           'Member Name': member.name,
           'Email': member.email,
           'College': member.college,
@@ -145,6 +169,18 @@ export default function AdminDashboard() {
               <Download className="w-5 h-5 mr-2" />
               Download Report
             </button>
+          </div>
+        </div>
+
+        {/* Cards for Total Teams and Total Members */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white shadow-md rounded-lg p-6 border-l-4 border-blue-600">
+            <h3 className="text-lg font-medium text-gray-900">Total Teams Registered</h3>
+            <p className="text-3xl font-bold text-blue-600 mt-2">{totalTeams}</p>
+          </div>
+          <div className="bg-white shadow-md rounded-lg p-6 border-l-4 border-green-600">
+            <h3 className="text-lg font-medium text-gray-900">Total Members</h3>
+            <p className="text-3xl font-bold text-green-600 mt-2">{totalMembers}</p>
           </div>
         </div>
 
