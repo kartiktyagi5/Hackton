@@ -20,8 +20,9 @@ interface TeamWithMembers {
 
 export default function AdminDashboard() {
   const [teams, setTeams] = useState<TeamWithMembers[]>([]);
-  const [totalTeams, setTotalTeams] = useState(0); // State for total teams
-  const [totalMembers, setTotalMembers] = useState(0); // State for total members
+  const [totalTeams, setTotalTeams] = useState(0); // Total registered teams
+  const [totalMembers, setTotalMembers] = useState(0); // Total members
+  const [teamsWithProblemStatement, setTeamsWithProblemStatement] = useState(0); // Teams with problem statement
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -81,6 +82,7 @@ export default function AdminDashboard() {
       setTeams(teamsWithMembers);
       setTotalTeams(teamsWithMembers.length); // Update total teams
       setTotalMembers(teamsWithMembers.reduce((sum, team) => sum + team.members.length, 0)); // Sum all members
+      setTeamsWithProblemStatement(teamsWithMembers.filter(team => team.problem_statement).length); // Count teams with problem statement
     } catch (error) {
       console.error('Error loading teams:', error);
       toast.error('Failed to load teams');
@@ -172,8 +174,8 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Cards for Total Teams and Total Members */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+        {/* Cards for Total Teams, Total Members, and Teams with Problem Statement */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <div className="bg-white shadow-md rounded-lg p-6 border-l-4 border-blue-600">
             <h3 className="text-lg font-medium text-gray-900">Total Teams Registered</h3>
             <p className="text-3xl font-bold text-blue-600 mt-2">{totalTeams}</p>
@@ -181,6 +183,10 @@ export default function AdminDashboard() {
           <div className="bg-white shadow-md rounded-lg p-6 border-l-4 border-green-600">
             <h3 className="text-lg font-medium text-gray-900">Total Members</h3>
             <p className="text-3xl font-bold text-green-600 mt-2">{totalMembers}</p>
+          </div>
+          <div className="bg-white shadow-md rounded-lg p-6 border-l-4 border-yellow-600">
+            <h3 className="text-lg font-medium text-gray-900">Teams with Problem Statement</h3>
+            <p className="text-3xl font-bold text-yellow-600 mt-2">{teamsWithProblemStatement}</p>
           </div>
         </div>
 
