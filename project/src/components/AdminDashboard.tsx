@@ -32,7 +32,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Define domains and problem statements
+  // Define domains and problem statements (added OISSEE domain)
   const domains = {
     'SDRE': [
       'EV Route & Charging Optimization (SDRE-1)',
@@ -61,6 +61,9 @@ export default function AdminDashboard() {
       'FinTech: SME Financial Management & Credit Access (SEFB-3)',
       'The Ultimate Startup Ecosystem Platform (SEFB-4)',
       'Startup & Business Education Hub (SEFB-5)',
+    ],
+    'OISSEE': [
+      'Open Innovation, Student Startup and Entrepreneurial Ecosystems (OISSEE-1)',
     ],
   };
 
