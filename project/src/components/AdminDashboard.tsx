@@ -18,13 +18,51 @@ interface TeamWithMembers {
   }[];
 }
 
+interface DomainStats {
+  domain: string;
+  problemStatements: { [key: string]: number };
+}
+
 export default function AdminDashboard() {
   const [teams, setTeams] = useState<TeamWithMembers[]>([]);
-  const [totalTeams, setTotalTeams] = useState(0); // Total registered teams
-  const [totalMembers, setTotalMembers] = useState(0); // Total members
-  const [teamsWithProblemStatement, setTeamsWithProblemStatement] = useState(0); // Teams with problem statement
+  const [totalTeams, setTotalTeams] = useState(0);
+  const [totalMembers, setTotalMembers] = useState(0);
+  const [teamsWithProblemStatement, setTeamsWithProblemStatement] = useState(0);
+  const [domainStats, setDomainStats] = useState<DomainStats[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  // Define domains and problem statements
+  const domains = {
+    'SDRE': [
+      'EV Route & Charging Optimization (SDRE-1)',
+      'Carbon Footprint Tracker (SDRE-2)',
+      'Community-Based Food Donation Platform (SDRE-3)',
+      'EV Subscription & Roadside Assistance Platform (SDRE-4)',
+      'Sustainable Waste Management System (SDRE-5)',
+    ],
+    'AFGI': [
+      'Agricultural Product Marketplace (AFGI-1)',
+      'AI-Powered Pest & Disease Detection (AFGI-2)',
+      'Waste Reduction & Circular Economy (AFGI-3)',
+      'Digital Crop Monitoring System for Food Security (AFGI-4)',
+      'Urban Farming Management Software (AFGI-5)',
+    ],
+    'MHB': [
+      'Patient Appointment Scheduling System (MHB-1)',
+      'Medical Research Data Management System (MHB-2)',
+      'Bioinformatics Data Visualization Tool (MHB-3)',
+      'Nutrition & Diet Management (MHB-4)',
+      'Real-Time Blood Bank & Organ Donation Registry (MHB-5)',
+    ],
+    'SEFB': [
+      'Financial Literacy Mobile App (SEFB-1)',
+      'Business Performance Analytics Tool (SEFB-2)',
+      'FinTech: SME Financial Management & Credit Access (SEFB-3)',
+      'The Ultimate Startup Ecosystem Platform (SEFB-4)',
+      'Startup & Business Education Hub (SEFB-5)',
+    ],
+  };
 
   useEffect(() => {
     loadTeams();
@@ -80,9 +118,19 @@ export default function AdminDashboard() {
       })) || [];
 
       setTeams(teamsWithMembers);
-      setTotalTeams(teamsWithMembers.length); // Update total teams
-      setTotalMembers(teamsWithMembers.reduce((sum, team) => sum + team.members.length, 0)); // Sum all members
-      setTeamsWithProblemStatement(teamsWithMembers.filter(team => team.problem_statement).length); // Count teams with problem statement
+      setTotalTeams(teamsWithMembers.length);
+      setTotalMembers(teamsWithMembers.reduce((sum, team) => sum + team.members.length, 0));
+      setTeamsWithProblemStatement(teamsWithMembers.filter(team => team.problem_statement).length);
+
+      // Calculate domain and problem statement statistics
+      const stats: DomainStats[] = Object.keys(domains).map(domain => ({
+        domain,
+        problemStatements: domains[domain].reduce((acc, problem) => {
+          acc[problem] = teamsWithMembers.filter(team => team.problem_statement === problem.match(/\(([^)]+)\)/)?.[1]).length;
+          return acc;
+        }, {} as { [key: string]: number }),
+      }));
+      setDomainStats(stats);
     } catch (error) {
       console.error('Error loading teams:', error);
       toast.error('Failed to load teams');
@@ -136,6 +184,17 @@ export default function AdminDashboard() {
       const membersSheet = XLSX.utils.json_to_sheet(membersData);
       XLSX.utils.book_append_sheet(workbook, membersSheet, 'Team Members');
 
+      // Create worksheet for domain and problem statement statistics
+      const domainStatsData = domainStats.flatMap(stat =>
+        Object.entries(stat.problemStatements).map(([problem, count]) => ({
+          Domain: stat.domain,
+          'Problem Statement': problem,
+          'Teams Selected': count,
+        }))
+      );
+      const domainStatsSheet = XLSX.utils.json_to_sheet(domainStatsData);
+      XLSX.utils.book_append_sheet(workbook, domainStatsSheet, 'Domain Stats');
+
       XLSX.writeFile(workbook, 'teams-report.xlsx');
       toast.success('Report downloaded successfully');
     } catch (error) {
@@ -187,6 +246,33 @@ export default function AdminDashboard() {
           <div className="bg-white shadow-md rounded-lg p-6 border-l-4 border-yellow-600">
             <h3 className="text-lg font-medium text-gray-900">Teams with Problem Statement</h3>
             <p className="text-3xl font-bold text-yellow-600 mt-2">{teamsWithProblemStatement}</p>
+          </div>
+        </div>
+
+        {/* Table for Domain and Problem Statement Distribution */}
+        <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Domain and Problem Statement Distribution</h3>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Domain</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Problem Statement</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teams Selected</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {domainStats.map(stat =>
+                  Object.entries(stat.problemStatements).map(([problem, count]) => (
+                    <tr key={`${stat.domain}-${problem}`}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{stat.domain}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{problem}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{count}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
 
